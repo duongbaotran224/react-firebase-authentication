@@ -1,12 +1,21 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 
-import * as ROUTES from '../../constants/routes';
+import {PasswordChangeForm} from '../PasswordChange'
+import {PasswordForgetForm} from '../PasswordForget'
+import {withAuthorization, AuthUserContext} from '../Session';
 
 const AccountPage = () => (
-  <div>
-    <h1>Account</h1>
-  </div>
+  <AuthUserContext.Consumer>
+    {authUser => (
+      <div>
+        <h1>Account: {authUser.email}</h1>
+        <PasswordChangeForm/>
+        <PasswordForgetForm/>
+      </div>
+    )}
+  </AuthUserContext.Consumer>
 );
 
-export default AccountPage 
+const condition = authUser => !!authUser;
+
+export default withAuthorization(condition)(AccountPage) 

@@ -11,33 +11,14 @@ const withAuthorization = condition => Component => {
   class withAuthorization extends React.Component {
 
     componentDidMount() {
-      this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
-        if(authUser){
-          this.props.firebase.user(authUser.uid)
-          .once('value')
-          .then(snapshot => {
-            const dbUser = snapshot.val();
-
-            // default empty roles
-            if (!dbUser.roles) {
-              dbUser.roles = {}
-            };
-
-            // merge auth and db user 
-            authUser = {
-              uid: dbUser.uid,
-              email: dbUser.email,
-              ...dbUser,
-            }; 
-
-            if (!condition(authUser)) {
-              this.props.history.push(ROUTES.SIGN_IN);
-            }
-          })
-
-        } 
-        else this.props.history.push(ROUTES.SIGN_IN);
-      })
+      this.listener = this.props.firebase.onAuthUserListener(
+        authUser => {
+          if (!condition(authUser)) {
+            this.props.history.push(ROUTES.SIGN_IN);
+          }
+        }, 
+        () => this.props.history.push(ROUTES.SIGN_IN),
+      );
     } 
 
     componentWillUnmount() {

@@ -39,6 +39,37 @@ class Firebase {
   user = uid => this.db.ref(`/user/${uid}`);
 
   users = () => this.db.ref(`users`);
+
+  // *** Merge Auth and DB User API *** //
+
+  onAuthUserListener = (next, fallback) => {
+    this.onAuthStateChanged(authUser => {
+      if (authUser) {
+        this.user(authUser.uid)
+        .once('value')
+        .then(snapshot => {
+          const dbUser = snapshot.val();
+
+          // default empty roles in DB user
+          if (!dbUser.roles) {
+            dbUser.roles = {} 
+          }
+          
+          // merge Auth and DB user
+          authUser = {
+            uid: dbUser.uid,
+            email: dbUser.email,
+            ...dbUser,
+          }
+
+          next(authUser)
+
+        })
+      }
+      else fallback();
+    })
+
+  }
 }
 
 

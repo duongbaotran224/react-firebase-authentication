@@ -7,7 +7,6 @@ import { withFirebase } from '../Firebase';
 import AuthUserContext from './context';
 
 const withAuthorization = condition => Component => {
-  
   class withAuthorization extends React.Component {
 
     componentDidMount() {
@@ -44,3 +43,5 @@ const withAuthorization = condition => Component => {
 };
 
 export default withAuthorization;
+
+

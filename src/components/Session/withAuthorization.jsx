@@ -7,7 +7,7 @@ import { withFirebase } from '../Firebase';
 import AuthUserContext from './context';
 
 const withAuthorization = condition => Component => {
-  class withAuthorization extends React.Component {
+  class WithAuthorization extends React.Component {
 
     componentDidMount() {
       this.listener = this.props.firebase.onAuthUserListener(
@@ -39,7 +39,7 @@ const withAuthorization = condition => Component => {
   return compose(
     withFirebase,
     withRouter,
-  )(withAuthorization);
+  )(WithAuthorization);
   
 };
 

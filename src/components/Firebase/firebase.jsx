@@ -49,6 +49,13 @@ class Firebase {
   doPasswordUpdate = password =>
     this.auth.currentUser.updatePassword(password);
 
+  doSendEmailVerification = () => 
+    this.auth.currentUser.sendEmailVerification({
+      url: "http://localhost:3000"
+    });
+
+
+
   // *** User API ***
 
   user = uid => this.db.ref(`/user/${uid}`);
@@ -74,6 +81,8 @@ class Firebase {
           authUser = {
             uid: authUser.uid,
             email: authUser.email,
+            emailVerified: authUser.emailVerified,
+            providerData: authUser.providerData,
             ...dbUser,
           }
 

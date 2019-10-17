@@ -64,7 +64,7 @@ class PasswordChangeFormBase extends Component {
                onChange={this.onChange} 
         />
 
-        <button disable={isInvalid} type="submit">
+        <button disabled={isInvalid} type="submit">
           Reset My Password
         </button>
 

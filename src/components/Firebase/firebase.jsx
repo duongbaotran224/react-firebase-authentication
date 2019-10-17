@@ -62,6 +62,13 @@ class Firebase {
 
   users = () => this.db.ref(`users`);
 
+
+  // *** Message API *** 
+
+  message = uid => this.db.ref(`/messages/${uid}`);
+
+  messages = () => this.db.ref(`/messages`);
+
   // *** Merge Auth and DB User API *** //
 
   onAuthUserListener = (next, fallback) => (

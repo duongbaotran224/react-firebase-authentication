@@ -16,7 +16,8 @@ const config = {
 class Firebase {
   constructor() {
     app.initializeApp(config);
-    
+
+    this.serverValue = app.database.ServerValue;
     this.emailAuthProvider = app.auth.EmailAuthProvider;
     this.auth = app.auth();
     this.db = app.database();
@@ -33,14 +34,14 @@ class Firebase {
   doSignInWithEmailAndPassword = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
 
-  doSignInWithGoogle = () => 
+  doSignInWithGoogle = () =>
     this.auth.signInWithPopup(this.googleProvider);
 
-  doSignInWithFacebook = () => 
+  doSignInWithFacebook = () =>
     this.auth.signInWithPopup(this.facebookProvider);
-   
-  doSignInWithTwitter = () => 
-  this.auth.signInWithPopup(this.twitterProvider);
+
+  doSignInWithTwitter = () =>
+    this.auth.signInWithPopup(this.twitterProvider);
 
   doSignOut = () => this.auth.signOut();
 
@@ -49,7 +50,7 @@ class Firebase {
   doPasswordUpdate = password =>
     this.auth.currentUser.updatePassword(password);
 
-  doSendEmailVerification = () => 
+  doSendEmailVerification = () =>
     this.auth.currentUser.sendEmailVerification({
       url: "http://localhost:3000"
     });
@@ -75,27 +76,27 @@ class Firebase {
     this.auth.onAuthStateChanged(authUser => {
       if (authUser) {
         this.user(authUser.uid)
-        .once('value')
-        .then(snapshot => {
-          const dbUser = snapshot.val();
+          .once('value')
+          .then(snapshot => {
+            const dbUser = snapshot.val();
 
-          // default empty roles in DB user
-          if (!dbUser.roles) {
-            dbUser.roles = {} 
-          }
-          
-          // merge Auth and DB user
-          authUser = {
-            uid: authUser.uid,
-            email: authUser.email,
-            emailVerified: authUser.emailVerified,
-            providerData: authUser.providerData,
-            ...dbUser,
-          }
+            // default empty roles in DB user
+            if (!dbUser.roles) {
+              dbUser.roles = {}
+            }
 
-          next(authUser)
+            // merge Auth and DB user
+            authUser = {
+              uid: authUser.uid,
+              email: authUser.email,
+              emailVerified: authUser.emailVerified,
+              providerData: authUser.providerData,
+              ...dbUser,
+            }
 
-        })
+            next(authUser)
+
+          })
       } else {
         fallback();
       }
